@@ -1,4 +1,4 @@
 python-netbox==0.0.21 # Removed this one in favor or my own fork
 rich==12.5.1
 rope==1.1.1
-autopep==1.6.0
+autopep8==1.6.0
