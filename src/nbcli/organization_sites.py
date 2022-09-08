@@ -1,3 +1,4 @@
+import click
 from ctypes import alignment
 from .nbcli import nbcli_object
 from .organization import organization
@@ -11,7 +12,10 @@ def sites():
 
 
 @sites.command()
-def list():
+@click.option('--name', type=str)
+@click.option('--name__ic', type=str)
+@click.option('--description__ic', type=str)
+def list(**kwargs) -> None:
     """ Lists the sites in the NetBox database
 
         Parameters
@@ -35,7 +39,14 @@ def list():
     table.add_column('Description')
 
     # Get the resources and add them to the table
-    resources = nbcli_object.nb.dcim.sites.all()
+    resource_object = nbcli_object.nb.dcim.sites
+
+    # Filter resources if needed
+    if len(kwargs) == 0:
+        resources = resource_object.all()
+    else:
+        resources = resource_object.filter(**kwargs)
+
     for resource in resources:
         table.add_row(
             str(resource.id),
