@@ -1,8 +1,8 @@
 import click
-from .nbcli import nbcli
+from .cli import cli
 
 
-@nbcli.group()
+@cli.group()
 def organization():
     pass
 
@@ -13,6 +13,5 @@ def sites():
 
 
 @sites.command()
-@click.option('--all', is_flag=True)
 def list(all: bool = True):
-    print('listing sites')
+    pass
