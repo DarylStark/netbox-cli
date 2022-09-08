@@ -1,8 +1,8 @@
-class NetboxCLIException(Exception):
+class NetBoxCLIException(Exception):
     """ Base class for exceptions """
     pass
 
 
-class ConfigInstancesLastDeleted(NetboxCLIException):
+class ConfigInstancesLastDeleted(NetBoxCLIException):
     """ Error when a instance gets deleted that is the last """
     pass

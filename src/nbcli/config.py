@@ -13,19 +13,19 @@ def get_config() -> dict:
     """ retrieve configuration from configfile """
 
 
-@cli.group(help='Netbox CLI configuration')
+@cli.group(help='NetBox CLI configuration')
 def config() -> None:
     pass
 
 
-@config.command(help='Add a Netbox instance. Default port is 8000')
+@config.command(help='Add a NetBox instance. Default port is 8000')
 @click.option('--name', type=str, prompt=True)
 @click.option('--server', type=str, prompt=True)
 @click.option('--api-key', type=str, prompt='API key')
 @click.option('--port', type=int, default=8000, prompt=True)
 def create_instance(name: str, server: str, api_key: str, port: int) -> None:
     """ The `create-instance` command can be used to add a
-        Netbox instance.
+        NetBox instance.
 
         Parameters
         ----------
@@ -69,7 +69,7 @@ def create_instance(name: str, server: str, api_key: str, port: int) -> None:
     nbcli_object.save()
 
 
-@config.command(help='List configured Netbox instances')
+@config.command(help='List configured NetBox instances')
 def list_instances() -> None:
     """ The `list_instances` command returns a list of
         configured instances.
@@ -105,10 +105,10 @@ def list_instances() -> None:
     console.print(table)
 
 
-@config.command(help='Inspect a specific Netbox instance')
+@config.command(help='Inspect a specific NetBox instance')
 @click.argument('name', type=str)
 def inspect_instance(name: str) -> None:
-    """ Inspect a specific instance of Netbox
+    """ Inspect a specific instance of NetBox
 
         Parameters
         ----------
@@ -134,7 +134,7 @@ def inspect_instance(name: str) -> None:
     instance_object = config['instances'][name]
 
     # Create a table for the output
-    table = Table(**tables)
+    table = Table(show_header=False, **tables)
     table.add_column('Setting', style='item_identification')
     table.add_column('Value')
 
@@ -149,7 +149,7 @@ def inspect_instance(name: str) -> None:
     console.print(table)
 
 
-@config.command(help='Update a configured Netbox instance')
+@config.command(help='Update a configured NetBox instance')
 @click.argument('name', type=str)
 @click.option('--server', type=str)
 @click.option('--api-key', type=str)
@@ -173,7 +173,7 @@ def update_instance(name: str, server: str, api_key: str, port: int, base_path: 
             The port to connect to
 
         base_path: str
-            The base path on the server for Netbox
+            The base path on the server for NetBox
 
         Returns
         -------
@@ -198,7 +198,7 @@ def update_instance(name: str, server: str, api_key: str, port: int, base_path: 
     nbcli_object.save()
 
 
-@config.command(help='Delete a configured Netbox instance')
+@config.command(help='Delete a configured NetBox instance')
 @click.argument('name', type=str)
 def delete_instance(name: str) -> None:
     """ Delete a instance
@@ -238,10 +238,10 @@ def delete_instance(name: str) -> None:
     nbcli_object.save()
 
 
-@config.command(help='Activate a specific Netbox instance')
+@config.command(help='Activate a specific NetBox instance')
 @click.argument('name', type=str)
 def activate_instance(name: str) -> None:
-    """ Activate a specific instance of Netbox
+    """ Activate a specific instance of NetBox
 
         Parameters
         ----------

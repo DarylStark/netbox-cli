@@ -136,7 +136,7 @@ class NetBoxCLI:
         return config['instances'][config['active_instance']]
 
     def create_pynetbox_object(self) -> None:
-        """ Method to create a PyNetbox object
+        """ Method to create a PyNetBox object
 
             Parameters
             ----------

@@ -12,7 +12,7 @@ def sites():
 
 @sites.command()
 def list():
-    """ Lists the sites in the Netbox database
+    """ Lists the sites in the NetBox database
 
         Parameters
         ----------
