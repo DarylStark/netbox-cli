@@ -15,7 +15,8 @@ theme = Theme({
     'error': 'red',
     'error_highlight': 'yellow',
     'item_activated': 'green',
-    'item_identification': 'blue'
+    'item_identification': 'blue',
+    'item_selected': 'white bold'
 })
 
 # Create a reusable Rich-console

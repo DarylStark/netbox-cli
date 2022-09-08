@@ -46,7 +46,7 @@ class NetBoxCLI:
 
         # Default configuration
         default_config = {
-            'selected_instance': 'default',
+            'active_instance': 'default',
             'instances': {
                 'default': {
                     'server': 'localhost',
