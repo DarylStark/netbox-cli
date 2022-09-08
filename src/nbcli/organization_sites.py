@@ -113,6 +113,9 @@ def update(name: str, **kwargs) -> None:
 
         Parameters
         ----------
+        name: str
+            The name of the site to update
+
         **kwargs: dict
             Values to update
 
@@ -134,3 +137,28 @@ def update(name: str, **kwargs) -> None:
 
     # Update the resource
     resource_object.save()
+
+
+@sites.command(help='Delete a site')
+@click.argument('name', type=str)
+def delete(name: str) -> None:
+    """ Method to delete a site
+
+        Parameters
+        ----------
+        name: str
+            The name of the site to delete
+
+        Returns
+        -------
+        None
+    """
+
+    # Create the object
+    nbcli_object.create_pynetbox_object()
+
+    # Get the resources
+    resource_object = nbcli_object.nb.dcim.sites.get(name=name)
+
+    # Delete the resource
+    resource_object.delete()
