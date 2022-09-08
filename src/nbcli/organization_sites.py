@@ -27,11 +27,8 @@ def create(**kwargs) -> None:
 
         Parameters
         ----------
-        name: str
-            The name of the site
-
-        slug: str
-            The slug for the site
+        **kwargs: dict
+            Values to update
 
         Returns
         -------
@@ -98,3 +95,42 @@ def list(**kwargs) -> None:
 
     # Print the table
     console.print(table)
+
+
+@sites.command(help='Update a site')
+@click.argument('name', type=str)
+@click.option('--slug', type=str)
+@click.option('--status', type=click.Choice(
+    ['planned', 'staging', 'active', 'decommissioning', 'retired']
+))
+@click.option('--facility', type=str)
+@click.option('--description', type=str)
+@click.option('--physical-address', type=str)
+@click.option('--shipping-address', type=str)
+@click.option('--comments', type=str)
+def update(name: str, **kwargs) -> None:
+    """ Method to update a site
+
+        Parameters
+        ----------
+        **kwargs: dict
+            Values to update
+
+        Returns
+        -------
+        None
+    """
+
+    # Create the object
+    nbcli_object.create_pynetbox_object()
+
+    # Get the resources
+    resource_object = nbcli_object.nb.dcim.sites.get(name=name)
+
+    # Update the resource
+    for setting, value in kwargs.items():
+        if value is not None:
+            setattr(resource_object, setting, value)
+
+    # Update the resource
+    resource_object.save()
