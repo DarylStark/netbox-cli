@@ -103,6 +103,49 @@ def list_instances() -> None:
     console.print(table)
 
 
+@config.command(help='Inspect a specific Netbox instance')
+@click.argument('name', type=str)
+def inspect_instance(name: str) -> None:
+    """ Inspect a specific instance of Netbox
+
+        Parameters
+        ----------
+        name: str
+            The name of the instance to inspect
+
+        Returns
+        -------
+        None
+    """
+    # Retrieve the config
+    config = nbcli_object.config
+
+    # Check if this instance is unique
+    if name not in config['instances'].keys():
+        logger.debug(
+            f'Possible instances: {list(config["instances"].keys())}')
+        console.print(
+            f'[error]No instance with name "[error_highlight]{name}[/]" found[/]')
+        return
+
+    # Get the instance object
+    instance_object = config['instances'][name]
+
+    # Create a table for the output
+    table = Table(**tables)
+    table.add_column('Setting', style='item_identification')
+    table.add_column('Value')
+
+    # Add the rows
+    table.add_row('Name', name)
+    table.add_row('Server', instance_object['server'])
+    table.add_row('Port', str(instance_object['port']))
+    table.add_row('Base path', instance_object['base_path'])
+
+    # Print the table
+    console.print(table)
+
+
 @config.command(help='Update a configured Netbox instance')
 @click.argument('name', type=str)
 @click.option('--server', type=str)
