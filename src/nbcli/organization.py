@@ -2,16 +2,21 @@ import click
 from .cli import cli
 
 
-@cli.group()
+@cli.group(help='Organization management')
 def organization():
     pass
 
 
-@organization.group()
+@organization.group(help='Site management')
 def sites():
     pass
 
 
-@sites.command()
-def list(all: bool = True):
+@organization.group(help='Region management')
+def regions():
+    pass
+
+
+@organization.group(help='Location management')
+def locations():
     pass

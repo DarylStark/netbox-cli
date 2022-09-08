@@ -10,12 +10,12 @@ def get_config() -> dict:
     """ retrieve configuration from configfile """
 
 
-@cli.group()
+@cli.group(help='Netbox CLI configuration')
 def config():
     pass
 
 
-@config.command()
+@config.command(help='List configured Netbox isntances')
 def list_instances():
     """ The `list_instances` command returns a list of
         configured instances.
