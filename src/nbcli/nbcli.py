@@ -4,6 +4,7 @@ from typing import Optional
 import logging
 import json
 import os
+import pynetbox
 
 NBCLI_CONFIG_FILE = f'{Path.home()}/.nbcli.json'
 
@@ -119,6 +120,37 @@ class NetBoxCLI:
         self.logger.debug(f'Opening "{NBCLI_CONFIG_FILE}" for writing')
         with open(NBCLI_CONFIG_FILE, 'w') as config_file:
             config_file.write(json.dumps(self.config_dict))
+
+    def get_active_instance(self) -> dict:
+        """ Method to get the active instance
+
+            Parameters
+            ----------
+            None
+
+            Returns
+            -------
+            None
+        """
+        config = self.config
+        return config['instances'][config['active_instance']]
+
+    def create_pynetbox_object(self) -> None:
+        """ Method to create a PyNetbox object
+
+            Parameters
+            ----------
+            None
+
+            Returns
+            -------
+            None
+        """
+        instance = self.get_active_instance()
+        nb_url = f'http://{instance["server"]}:{instance["port"]}{instance["base_path"]}'
+        self.nb = pynetbox.api(
+            nb_url,
+            token=instance["api_key"])
 
 
 nbcli_object = NetBoxCLI()

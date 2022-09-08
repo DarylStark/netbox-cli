@@ -141,6 +141,7 @@ def inspect_instance(name: str) -> None:
     table.add_row('Server', instance_object['server'])
     table.add_row('Port', str(instance_object['port']))
     table.add_row('Base path', instance_object['base_path'])
+    table.add_row('API key', instance_object['api_key'])
 
     # Print the table
     console.print(table)
@@ -190,7 +191,7 @@ def update_instance(name: str, server: str, api_key: str, port: int, base_path: 
     # Update the dict
     for item in ('server', 'api_key', 'port', 'base_path'):
         if locals()['item']:
-            config['instances'][name][item] = locals()['item']
+            config['instances'][name][item] = locals()[item]
 
     nbcli_object.save()
 

@@ -1,5 +1,5 @@
-python-netbox
 click
 rich
 rope
 autopep8
+pynetbox
