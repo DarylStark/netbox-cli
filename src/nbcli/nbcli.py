@@ -1,6 +1,7 @@
 from genericpath import isfile
 from pathlib import Path
 from typing import Optional
+import logging
 import json
 import os
 
@@ -22,8 +23,8 @@ class NetBoxCLI:
         # Default configuration is nothing
         self.config_dict: Optional[dict] = None
 
-        # Retrieve the configuration
-        self.get_configuration()
+        # Create a logger
+        self.logger = logging.getLogger('NetBoxCLI')
 
     def create_default_config(self, force: bool = False) -> None:
         """ Method to create the default config
@@ -40,6 +41,7 @@ class NetBoxCLI:
             None
         """
         if os.path.isfile(NBCLI_CONFIG_FILE) and not force:
+            self.logger.debug(f'File "{NBCLI_CONFIG_FILE}" already exists')
             return
 
         # Default configuration
@@ -54,6 +56,8 @@ class NetBoxCLI:
                 }
             }
         }
+
+        self.logger.debug(f'Opening "{NBCLI_CONFIG_FILE}" for writing')
         with open(NBCLI_CONFIG_FILE, 'w') as config_file:
             config_file.write(json.dumps(default_config))
         self.config_dict = default_config
@@ -74,8 +78,11 @@ class NetBoxCLI:
             None
         """
         self.create_default_config()
+        self.logger.debug(f'Opening "{NBCLI_CONFIG_FILE}" for reading')
         with open(NBCLI_CONFIG_FILE, 'r') as config_file:
             config = json.loads(config_file.read())
+
+        self.logger.debug('Loaded config')
 
         # Save it
         self.config_dict = config
@@ -109,6 +116,7 @@ class NetBoxCLI:
             -------
             None
         """
+        self.logger.debug(f'Opening "{NBCLI_CONFIG_FILE}" for writing')
         with open(NBCLI_CONFIG_FILE, 'w') as config_file:
             config_file.write(json.dumps(self.config_dict))
 
