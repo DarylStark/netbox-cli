@@ -16,42 +16,6 @@ def config() -> None:
     pass
 
 
-@config.command(help='List configured Netbox instances')
-def list_instances() -> None:
-    """ The `list_instances` command returns a list of
-        configured instances.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-    """
-    # Retrieve the config
-    config = nbcli_object.config
-
-    # Create a table for the output
-    table = Table(**tables)
-    table.add_column('*', style='item_selected')
-    table.add_column('Name', style='item_identification')
-    table.add_column('Server')
-    table.add_column('Port')
-
-    # Add the rows
-    for name, instance_detail in nbcli_object.config['instances'].items():
-        table.add_row(
-            '*' if name == config['active_instance'] else '',
-            name,
-            instance_detail['server'],
-            str(instance_detail['port']),
-        )
-
-    # Print the table
-    console.print(table)
-
-
 @config.command(help='Add a Netbox instance. Default port is 8000')
 @click.argument('name', type=str)
 @click.argument('server', type=str)
@@ -103,6 +67,71 @@ def add_instance(name: str, server: str, api_key: str, port: int) -> None:
     nbcli_object.save()
 
 
+@config.command(help='List configured Netbox instances')
+def list_instances() -> None:
+    """ The `list_instances` command returns a list of
+        configured instances.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+    """
+    # Retrieve the config
+    config = nbcli_object.config
+
+    # Create a table for the output
+    table = Table(**tables)
+    table.add_column('*', style='item_selected')
+    table.add_column('Name', style='item_identification')
+    table.add_column('Server')
+    table.add_column('Port')
+
+    # Add the rows
+    for name, instance_detail in nbcli_object.config['instances'].items():
+        table.add_row(
+            '*' if name == config['active_instance'] else '',
+            name,
+            instance_detail['server'],
+            str(instance_detail['port']),
+        )
+
+    # Print the table
+    console.print(table)
+
+
+@config.command(help='Delete a configured Netbox instance')
+@click.argument('name', type=str)
+def delete_instance(name: str) -> None:
+    """ Delete a instance
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+    """
+    # Retrieve the config
+    config = nbcli_object.config
+
+    # Check if this instance is unique
+    if name not in config['instances'].keys():
+        logger.debug(
+            f'Possible instances: {list(config["instances"].keys())}')
+        console.print(
+            f'[error]No instance with name "[error_highlight]{name}[/]" found[/]')
+        return
+
+    # Remove the key from the dict
+    config['instances'].pop(name)
+    nbcli_object.save()
+
+
 @config.command(help='Activate a specific Netbox instance')
 @click.argument('name', type=str)
 def activate_instance(name: str) -> None:
@@ -125,7 +154,7 @@ def activate_instance(name: str) -> None:
         logger.debug(
             f'Possible instances: {list(config["instances"].keys())}')
         console.print(
-            f'[error]No instance with "[error_highlight]{name}[/]" found[/]')
+            f'[error]No instance with name "[error_highlight]{name}[/]" found[/]')
         return
 
     # Set the active instance
