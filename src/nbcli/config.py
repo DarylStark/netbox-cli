@@ -17,10 +17,10 @@ def config() -> None:
 
 
 @config.command(help='Add a Netbox instance. Default port is 8000')
-@click.argument('name', type=str)
-@click.argument('server', type=str)
-@click.argument('api-key', type=str)
-@click.argument('port', type=int, default=8000)
+@click.option('--name', type=str, prompt=True)
+@click.option('--server', type=str, prompt=True)
+@click.option('--api-key', type=str, prompt='API key')
+@click.option('--port', type=int, default=8000, prompt=True)
 def add_instance(name: str, server: str, api_key: str, port: int) -> None:
     """ The `add-instance` command can be used to add a
         Netbox instance.
