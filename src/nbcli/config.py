@@ -1,6 +1,8 @@
 import logging
 import click
 from rich.table import Table
+
+from nbcli.exceptions import ConfigInstancesLastDeleted
 from .nbcli import nbcli_object
 from .cli import cli, console, tables
 
@@ -219,6 +221,17 @@ def delete_instance(name: str) -> None:
         console.print(
             f'[error]No instance with name "[error_highlight]{name}[/]" found[/]')
         return
+
+    # If this instance is the selected one, we selected another
+    if config['active_instance'] == name:
+        other_instances = [
+            instance
+            for instance in config['instances'].keys()
+            if instance != name]
+        if len(other_instances) == 0:
+            raise ConfigInstancesLastDeleted(
+                'This instance cannot be deleted since it is the last available instance')
+        config['active_instance'] = other_instances[0]
 
     # Remove the key from the dict
     config['instances'].pop(name)
