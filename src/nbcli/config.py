@@ -23,8 +23,8 @@ def config() -> None:
 @click.option('--server', type=str, prompt=True)
 @click.option('--api-key', type=str, prompt='API key')
 @click.option('--port', type=int, default=8000, prompt=True)
-def add_instance(name: str, server: str, api_key: str, port: int) -> None:
-    """ The `add-instance` command can be used to add a
+def create_instance(name: str, server: str, api_key: str, port: int) -> None:
+    """ The `create-instance` command can be used to add a
         Netbox instance.
 
         Parameters
@@ -192,7 +192,7 @@ def update_instance(name: str, server: str, api_key: str, port: int, base_path: 
 
     # Update the dict
     for item in ('server', 'api_key', 'port', 'base_path'):
-        if locals()['item']:
+        if locals()[item]:
             config['instances'][name][item] = locals()[item]
 
     nbcli_object.save()
