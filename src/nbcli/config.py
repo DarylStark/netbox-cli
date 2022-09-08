@@ -19,7 +19,7 @@ def config() -> None:
 @config.command(help='Add a Netbox instance. Default port is 8000')
 @click.argument('name', type=str)
 @click.argument('server', type=str)
-@click.argument('api_key', type=str)
+@click.argument('api-key', type=str)
 @click.argument('port', type=int, default=8000)
 def add_instance(name: str, server: str, api_key: str, port: int) -> None:
     """ The `add-instance` command can be used to add a
@@ -101,6 +101,55 @@ def list_instances() -> None:
 
     # Print the table
     console.print(table)
+
+
+@config.command(help='Update a configured Netbox instance')
+@click.argument('name', type=str)
+@click.option('--server', type=str)
+@click.option('--api-key', type=str)
+@click.option('--port', type=int)
+@click.option('--base-path', type=str)
+def update_instance(name: str, server: str, api_key: str, port: int, base_path: str) -> None:
+    """ Update a instance
+
+        Parameters
+        ----------
+        name: str
+            The name of the instance
+
+        server: str
+            The name of the server
+
+        api_key: str
+            The API key to use for this server
+
+        port: int
+            The port to connect to
+
+        base_path: str
+            The base path on the server for Netbox
+
+        Returns
+        -------
+        None
+    """
+    # Retrieve the config
+    config = nbcli_object.config
+
+    # Check if this instance is unique
+    if name not in config['instances'].keys():
+        logger.debug(
+            f'Possible instances: {list(config["instances"].keys())}')
+        console.print(
+            f'[error]No instance with name "[error_highlight]{name}[/]" found[/]')
+        return
+
+    # Update the dict
+    for item in ('server', 'api_key', 'port', 'base_path'):
+        if locals()['item']:
+            config['instances'][name][item] = locals()['item']
+
+    nbcli_object.save()
 
 
 @config.command(help='Delete a configured Netbox instance')
