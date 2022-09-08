@@ -11,6 +11,45 @@ def sites():
     pass
 
 
+@sites.command(help='Create a new site')
+@click.option('--name', type=str, prompt=True)
+@click.option('--slug', type=str, prompt=True)
+@click.option('--status', type=click.Choice(
+    ['planned', 'staging', 'active', 'decommissioning', 'retired']
+))
+@click.option('--facility', type=str)
+@click.option('--description', type=str)
+@click.option('--physical-address', type=str)
+@click.option('--shipping-address', type=str)
+@click.option('--comments', type=str)
+def create(**kwargs) -> None:
+    """ Method to create a new site
+
+        Parameters
+        ----------
+        name: str
+            The name of the site
+
+        slug: str
+            The slug for the site
+
+        Returns
+        -------
+        None
+    """
+
+    # Create the object
+    nbcli_object.create_pynetbox_object()
+
+    # Get the resources
+    resource_object = nbcli_object.nb.dcim.sites
+
+    # Add the new resource. We remove all fields that are set
+    # to None in a dict-comprehension
+    resource_object.create(
+        {setting: value for setting, value in kwargs.items() if value is not None})
+
+
 @sites.command(help='List the sites in NetBox')
 @click.option('--name', type=str)
 @click.option('--name__ic', type=str)
@@ -59,42 +98,3 @@ def list(**kwargs) -> None:
 
     # Print the table
     console.print(table)
-
-
-@sites.command(help='Create a new site')
-@click.option('--name', type=str, prompt=True)
-@click.option('--slug', type=str, prompt=True)
-@click.option('--status', type=click.Choice(
-    ['planned', 'staging', 'active', 'decommissioning', 'retired']
-))
-@click.option('--facility', type=str)
-@click.option('--description', type=str)
-@click.option('--physical-address', type=str)
-@click.option('--shipping-address', type=str)
-@click.option('--comments', type=str)
-def create(**kwargs) -> None:
-    """ Method to create a new site
-
-        Parameters
-        ----------
-        name: str
-            The name of the site
-
-        slug: str
-            The slug for the site
-
-        Returns
-        -------
-        None
-    """
-
-    # Create the object
-    nbcli_object.create_pynetbox_object()
-
-    # Get the resources
-    resource_object = nbcli_object.nb.dcim.sites
-
-    # Add the new resource. We remove all fields that are set
-    # to None in a dict-comprehension
-    resource_object.create(
-        {setting: value for setting, value in kwargs.items() if value is not None})
