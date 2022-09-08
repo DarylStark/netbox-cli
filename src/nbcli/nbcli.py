@@ -54,8 +54,9 @@ class NetBoxCLI:
                 }
             }
         }
-        with open(NBCLI_CONFIG_FILE, 'w') as config:
-            config.write(json.dumps(default_config))
+        with open(NBCLI_CONFIG_FILE, 'w') as config_file:
+            config_file.write(json.dumps(default_config))
+        self.config_dict = default_config
 
     def get_configuration(self) -> Optional[dict]:
         """ Method to retrieve the configuration ad save it
@@ -73,8 +74,8 @@ class NetBoxCLI:
             None
         """
         self.create_default_config()
-        with open(NBCLI_CONFIG_FILE, 'r') as config:
-            config = json.loads(config.read())
+        with open(NBCLI_CONFIG_FILE, 'r') as config_file:
+            config = json.loads(config_file.read())
 
         # Save it
         self.config_dict = config
@@ -82,9 +83,34 @@ class NetBoxCLI:
 
     @property
     def config(self) -> dict:
+        """ Property that returns the config
+
+            Parameters
+            ----------
+            None
+
+            Returns
+            -------
+            dict
+                The configuration
+        """
         if not self.config_dict:
             self.get_configuration()
         return self.config_dict
+
+    def save(self) -> None:
+        """ Save the configuration
+
+            Parameters
+            ----------
+            None
+
+            Returns
+            -------
+            None
+        """
+        with open(NBCLI_CONFIG_FILE, 'w') as config_file:
+            config_file.write(json.dumps(self.config_dict))
 
 
 nbcli_object = NetBoxCLI()

@@ -10,6 +10,8 @@ tables = {
 
 # Theming for Rich
 theme = Theme({
+    'error': 'red',
+    'error_highlight': 'yellow',
     'item_activated': 'green',
     'item_identification': 'blue'
 })
