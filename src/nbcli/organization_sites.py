@@ -97,6 +97,64 @@ def list(**kwargs) -> None:
     console.print(table)
 
 
+@sites.command(help='Inspect a specific site')
+@click.argument('name', type=str)
+def inspect(name: str) -> None:
+    """ Inspect a specific site
+
+        Parameters
+        ----------
+        name : str
+            The name for the site to inspect
+
+        Returns
+        -------
+        None
+    """
+    # Create the object
+    nbcli_object.create_pynetbox_object()
+
+    # Get the resource
+    resource_object = nbcli_object.nb.dcim.sites.get(name=name)
+
+    # Create a table for the site details
+    table = Table(show_header=False, **tables)
+    table.add_column('Setting', style='item_identification')
+    table.add_column('Value')
+
+    # Add the roes
+    table.add_row('Name', resource_object.name)
+    table.add_row('Region', str(resource_object.region))
+    table.add_row('Status', str(resource_object.status))
+    table.add_row('Tenant', resource_object.tenant)
+    table.add_row('Facility', resource_object.facility)
+    table.add_row('Description', resource_object.description)
+    table.add_row('Time zone', resource_object.time_zone)
+    table.add_row('Physical address', resource_object.physical_address)
+    table.add_row('Shipping address', resource_object.shipping_address)
+
+    # Print the table
+    console.print(table)
+
+    # Create a table for the related objects
+    table = Table(show_header=False, **tables)
+    table.add_column('Setting', style='item_identification')
+    table.add_column('Value')
+
+    # Add the roes
+    table.add_row('Racks', str(resource_object.rack_count))
+    table.add_row('Devices', str(resource_object.device_count))
+    table.add_row('Virtual Machines', str(
+        resource_object.virtualmachine_count))
+    table.add_row('Prefixes', str(resource_object.prefix_count))
+    table.add_row('VLANs', str(resource_object.vlan_count))
+    table.add_row('ASNs', str(len(resource_object.asns)))
+    table.add_row('Circuits', str(resource_object.circuit_count))
+
+    # Print the table
+    console.print(table)
+
+
 @sites.command(help='Update a site')
 @click.argument('name', type=str)
 @click.option('--slug', type=str)
