@@ -62,6 +62,7 @@ def list(**kwargs) -> None:
     table = Table(**tables)
     table.add_column('ID', style='item_identification', justify='right')
     table.add_column('Name', style='item_identification')
+    table.add_column('Sites')
     table.add_column('Description')
 
     # Get the resources
@@ -77,6 +78,7 @@ def list(**kwargs) -> None:
         table.add_row(
             str(resource.id),
             str(resource.name),
+            str(resource.site_count),
             str(resource.description)
         )
 
